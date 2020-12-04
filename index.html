@@ -1,0 +1,1552 @@
+<!-- INCIO -->
+
+<script>
+
+
+    // Numero de copos, recomendados entre 30 y 40
+    var nieve_cantidad=50
+    
+    // Colores de los copos se mostraran de forma aleatoria
+    var nieve_colorr=new Array("#FFF","#F8F8F8","#666")
+     
+    // Tipo de letra de los copos
+    var nieve_tipo=new Array("Arial Black","Arial Narrow","Times","Comic Sans MS")
+     
+    // Valor o letra de los copos
+    var nieve_letra="*"
+     
+    // velocidad de caida
+    var nieve_velocidad=5
+     
+    // tamaño mas grande de los copos
+    var nieve_cantidadsize=30
+     
+    // tamaño mas pequeño de los copos
+    var nieve_chico=10
+     
+    // 1 toda la pagina - 2 zona izquierda - 3 centro de pagina - 4 zona derecha
+    var nieve_zona=1
+     
+    var nieve=new Array();
+    var marginbottom;
+    var marginright;
+    var timer;
+    var i_nieve=0;
+    var x_mv=new Array();
+    var crds=new Array();
+    var lftrght=new Array();
+    var browserinfos=navigator.userAgent;
+    var ie5=document.all&&document.getElementById&&!browserinfos.match(/Opera/);
+    var ns6=document.getElementById&&!document.all;
+    var opera=browserinfos.match(/Opera/);  
+    var browserok=ie5||ns6||opera;
+     
+    function aleatorio(range) {    
+        rand=Math.floor(range*Math.random())
+        return rand
+    }
+     
+    function initnieve() {
+        if (ie5 || opera) {
+            marginbottom = document.closest(body).clientHeight
+            marginright = document.body.clientWidth
+        }
+        else if (ns6) {
+            marginbottom = window.innerHeight
+            marginright = window.innerWidth
+        }
+        var nievesizerange=nieve_cantidadsize-nieve_chico
+        for (i=0;i<=nieve_cantidad;i++) {
+            crds[i] = 0;                      
+            lftrght[i] = Math.random()*15;        
+            x_mv[i] = 0.03 + Math.random()/10;
+            nieve[i]=document.getElementById("s"+i)
+            nieve[i].style.fontFamily=nieve_tipo[aleatorio(nieve_tipo.length)]
+            nieve[i].size=aleatorio(nievesizerange)+nieve_chico
+            nieve[i].style.fontSize=nieve[i].size
+            nieve[i].style.color=nieve_colorr[aleatorio(nieve_colorr.length)]
+            nieve[i].sink=nieve_velocidad*nieve[i].size/5
+            if (nieve_zona==1) {nieve[i].posx=aleatorio(marginright-nieve[i].size)}
+            if (nieve_zona==2) {nieve[i].posx=aleatorio(marginright/2-nieve[i].size)}
+            if (nieve_zona==3) {nieve[i].posx=aleatorio(marginright/2-nieve[i].size)+marginright/4}
+            if (nieve_zona==4) {nieve[i].posx=aleatorio(marginright/2-nieve[i].size)+marginright/2}
+            nieve[i].posy=aleatorio(2*marginbottom-marginbottom-2*nieve[i].size)
+            nieve[i].style.left=nieve[i].posx
+            nieve[i].style.top=nieve[i].posy
+        }
+        movenieve()
+    }
+     
+    function movenieve() {
+        for (i=0;i<=nieve_cantidad;i++) {
+            crds[i] += x_mv[i];
+            nieve[i].posy+=nieve[i].sink
+            nieve[i].style.left=nieve[i].posx+lftrght[i]*Math.sin(crds[i]);
+            nieve[i].style.top=nieve[i].posy
+           
+            if (nieve[i].posy>=marginbottom-2*nieve[i].size || parseInt(nieve[i].style.left)>(marginright-3*lftrght[i])){
+                if (nieve_zona==1) {nieve[i].posx=aleatorio(marginright-nieve[i].size)}
+                if (nieve_zona==2) {nieve[i].posx=aleatorio(marginright/2-nieve[i].size)}
+                if (nieve_zona==3) {nieve[i].posx=aleatorio(marginright/2-nieve[i].size)+marginright/4}
+                if (nieve_zona==4) {nieve[i].posx=aleatorio(marginright/2-nieve[i].size)+marginright/2}
+                nieve[i].posy=0
+            }
+        }
+        var timer=setTimeout("movenieve()",100)
+    }
+     
+    for (i=0;i<=nieve_cantidad;i++) {
+        document.write("<span id='s"+i+"' style='position:absolute;top:-"+nieve_cantidadsize+"'>"+nieve_letra+"</span>")
+    }
+    if (browserok) {
+        window.onload=initnieve
+    }
+</script>
+
+<!-- FIN -->
+<!DOCTYPE html>
+<html lang="es">
+<head>
+   <meta charset="UTF-8">
+   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+   <title>Document</title>
+   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css" integrity="sha512-+4zCK9k+qNFUR5X+cKL9EIR+ZOhtIloNl9GIKS57V1MyNsYpYcUrUeQc9vNfzsWfV28IaLL3i96P9sdNyeRssA==" crossorigin="anonymous" />
+   <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/js/all.min.js" integrity="sha512-F5QTlBqZlvuBEs9LQPqc1iZv2UMxcVXezbHzomzS6Df4MZMClge/8+gXrKw2fl5ysdk4rWjR0vKS7NNkfymaBQ==" crossorigin="anonymous"></script>
+   <script
+ src="https://code.jquery.com/jquery-3.5.1.min.js"
+ integrity="sha256-9/aliU8dGd2tb6OSsuzixeV4y/faTqgFtohetphbbj0="
+ crossorigin="anonymous"></script>
+   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css" integrity="sha384-TX8t27EcRE3e/ihU7zmQxVncDAy5uIKz4rEkgIXeMed4M0jlfIDPvg6uqKI2xXr2" crossorigin="anonymous">
+
+   
+
+</head>
+<body>
+   <style>
+   :root{
+        --color-content_programas-radios: white;
+        --color-fondo-div-radios: rgb(37, 37, 37);
+        --border-radius-div-radios: 8px;
+        --border-shadow-div-radios: box-shadow: white;
+        --text-align-h2: center;
+        --float-right: right;
+        --float-center: center;
+   }
+   .card {
+       background-color: rgb(37, 37, 37);
+       color: white;
+   }
+   .table{
+       color: white !important;
+   }
+   .div_secciones{
+       background-color: var(--color-fondo-div-radios);
+       border-radius: var(--border-radius-div-radios);
+       box-shadow: var(--border-shadow-div-radios);
+   }
+
+   body{
+       background-color: #838383;
+       margin: 0px;
+   }
+   .contenido{
+       margin: 8px;
+       display: none;
+   }
+   .audioS{
+       border-radius: 1px 1px 1px 1px;
+       
+   }
+
+   .titulo{
+       padding-left: 8px;
+       margin: 0px;
+       display: inline-block;
+   }
+   
+   #fa{
+       margin-left: 100px;
+       margin-top: 10px;
+   }
+
+   #principal{
+       display: inline-block;
+       color: aliceblue;
+       background-color: rgb(5, 5, 5);
+       position: sticky;
+       top: 0px;
+       z-index: 1;
+       margin: 0px;
+       width: 100%;
+       border-radius: 0px 0px 20px 20px;
+       opacity: 0.9;
+      /* height: auto;*/
+       height: 70px;
+       border-bottom: solid 1px rgb(250, 250, 250);
+   }
+
+   #abrirSeccion{
+       background-color: rgb(0, 0, 0);
+       border-radius: 10px;
+       box-shadow: 0 0 15px;
+   }
+
+   .politica{
+       color: aliceblue;
+       background-color: rgb(53, 53, 53);
+       opacity: .5;
+       border-radius: 5px;
+       position: sticky;
+       bottom: 0;
+       z-index: 1;
+   }
+   .tituloRadio{
+           color: var(--color-content_programas-radios);
+           text-align: var(--text-align-h2);
+           float: var(--float-center);
+       }
+   ol{
+       color: var(--color-content_programas-radios);
+   }
+
+   .mask_radios{
+           border-radius: 200px 200px 200px 200px;
+   -moz-border-radius: 200px 200px 200px 200px;
+   -webkit-border-radius: 200px 200px 200px 200px;
+   border: 7px double #000000;
+   transition: transform .2s; /* Animation */
+   }
+   .mask_radios:hover{
+       transform: scale(1.5);
+   }
+
+   div.Header{
+       display: none;
+   }
+   .cargando{
+       text-align: center;
+       color: white;
+   }
+   .refrescar:hover{
+       cursor: pointer;
+   }
+   .animationScaleSize {
+        animation: aumentar .8s alternate infinite ease-in;
+    }
+
+    @keyframes aumentar {
+        0%   {transform: scale(.8);}
+        100% {transform: scale(1.5);}
+    }
+    .falla-conexion{
+        color:red; text-align:center
+    }
+   </style>
+
+     <div id="principal">
+       <h1 class="titulo"> URI </h1>
+       <i onclick="refrescar()" class="refrescar">Refrescar</i>
+       <a href="mailto:uribatachi@gmail.com">
+           <i style="color:rgb(255, 255, 255);" id="fa">Contacto APP</i>
+       </a>
+       <marquee style="margin-left: 8px; margin-right: 8px;">EN LA PARTE DEL MUNDO QUE ESTES "TE DESEAMOS FELIZ NAVIDAD"</marquee>
+   </div>
+
+   <div style="text-align:center">   
+        <iframe style="pointer-events: none;" src="https://www.zeitverschiebung.net/clock-widget-iframe-v2?language=es&size=small&timezone=America%2FCaracas" width="100%" height="100" frameborder="0" seamless></iframe>
+        <p>HORA VENEZUELA</p>
+   </div>
+   <div class="cargando">
+       Cargando, por favor espere...
+   </div>
+   <div class="contenido">
+
+       <hr>
+
+       <div id="radioDinamica" name="radioDinamica" class="div_secciones">
+       <p class="tituloRadio">
+           <i class="fas fa-list-ul"  style="color: azure;"  onclick="mostrarProgramacion(this)"></i>
+           RADIO DINAMICA 106.7 FM
+       </p>
+       <div class="container">
+           <div class="row">
+               <div class="col-2">
+                   <img class="mask_radios" onclick="mostrarProgramacion(this)" width="45" height="auto" src="https://milemisoras.com/timthumb.php?src=img/channel/8eac7b84d6cf29623ac3d4cf78ef4df6.png&h=100&w=100&zc=1" alt="">
+               </div>
+               <div class="col-10">
+                   <audio id="myAudio1" controls class="audioS" loop="loop" style="width: 100%;"> 
+                       <source src="https://node-17.zeno.fm/vqs9pxg3u7zuv.aac?rj-ttl=5&rj-tok=AAABdi3xD80Ago7xidUnIegwpw" type="audio/mpeg" id="prueba">
+                   </audio>
+               </div>
+           </div>
+       </div>
+       <span></span>
+       
+       <div id="accordion" class="mt-500 desplazar" style="display: none;">
+
+           <div class="card">
+             <div class="card-header" id="heading1">
+               <h5 class="mb-0">
+                 <button class="btn btn-link" data-toggle="collapse" data-target="#collapse1" aria-expanded="true" aria-controls="collapse1">
+                   LUNES
+                 </button>
+               </h5>
+               <div id="collapse1" class="collapse" aria-labelledby="heading1" data-parent="#accordion">
+                   <div class="card-body">
+                     <table class="table table-striped">
+                         <tr>
+                             <th>HORA</th>
+                             <th>PROGRAMA</th>
+                             <th>LOCUTOR</th>
+                         </tr>
+                         <tr>
+                             <td>06:00hs - 08:00hs</td>
+                             <td>Lo Mejor de la musica campesina y llanera</td>
+                             <td>Esperando Inf.</td>
+                         </tr>
+                         <tr>
+                             <td>08:00hs - 09:00hs</td>
+                             <td>Epoca de Oro</td>
+                             <td>Esperando Inf.</td>
+                         </tr>
+                         <tr>
+                             <td>09:00hs - 12:00hs</td>
+                             <td>Rompiendo la mañana con Mister</td>
+                             <td> Mister Jhonson
+                               <a href="whatsapp://send?text=Hola Mister&phone=+584167517674">
+                                   <i class="fab fa-whatsapp fa-1x " style="color:green;" ></i></a>
+                             </td>
+                         </tr>
+                         <tr>
+                             <td>12:00hs - 13:00hs</td>
+                             <td>Palabras de vida eterna</td>
+                             <td> Pastor Yair Guevara
+                               <a href="whatsapp://send?text=Hola Yair&phone=+573164121890">
+                                   <i class="fab fa-whatsapp fa-1x " style="color:green;" ></i></a>
+                             </td>
+                         </tr>
+                         <tr>
+                             <td>13:00hs - 15:00hs</td>
+                             <td>Super Trendy</td>
+                             <td>Saray
+                               <a href="whatsapp://send?text=Hola Sarahi&phone=+584168368109">
+                                   <i class="fab fa-whatsapp fa-1x " style="color:green;" ></i></a>
+                                y Landy
+                             <a href="whatsapp://send?text=Hola Daniel&phone=+584169985040">
+                                 <i class="fab fa-whatsapp fa-1x " style="color:green;" ></i></a>
+                           </td>
+                         </tr>
+                         <tr>
+                             <td>15:00hs - 16:00hs</td>
+                             <td>Explosion vallenata</td>
+                             <td>Alberto Contreras
+                               <a href="whatsapp://send?text=Hola Alberto&phone=+584162712613">
+                                   <i class="fab fa-whatsapp fa-1x " style="color:green;" ></i></a>
+                             </td>
+                         </tr>
+                         <tr>
+                             <td>16:00hs - 18:00hs</td>
+                             <td>Retro hits</td>
+                             <td> Mister Jhonson
+                               <a href="whatsapp://send?text=Hola Mister&phone=+584167517674">
+                                   <i class="fab fa-whatsapp fa-1x " style="color:green;" ></i></a>
+                             </td>
+                         </tr>
+                         <tr>
+                             <td>18:00hs - 19:00hs</td>
+                             <td>Cruzada deportiva</td>
+                             <td>Ivan Rondon</td>
+                         </tr>
+                         <tr>
+                             <td>19:00hs - 18:30hs</td>
+                             <td>Una ranchera y un vallenato</td>
+                             <td>Esperando Inf.</td>
+                         </tr>
+                     </table>
+                   </div>
+                 </div>
+               </div>
+           
+               <div class="card">
+                   <div class="card-header" id="heading2">
+                     <h5 class="mb-0">
+                       <button class="btn btn-link" data-toggle="collapse" data-target="#collapse2" aria-expanded="true" aria-controls="collapse2">
+                         MARTES
+                       </button>
+                     </h5>
+                   </div>
+                   <div id="collapse2" class="collapse" aria-labelledby="heading2" data-parent="#accordion">
+                     <div class="card-body">
+                       <table class="table table-striped">
+                           <tr>
+                               <th>HORA</th>
+                               <th>PROGRAMA</th>
+                               <th>LOCUTOR</th>
+                           </tr>
+                           <tr>
+                               <td>06:00hs - 08:00hs</td>
+                               <td>Lo Mejor de la musica campesina y llanera</td>
+                               <td>Esperando Inf.</td>
+                           </tr>
+                           <tr>
+                               <td>08:00hs - 09:00hs</td>
+                               <td>Epoca de Oro</td>
+                               <td>Esperando Inf.</td>
+                           </tr>
+                           <tr>
+                               <td>09:00hs - 12:00hs</td>
+                               <td>Rompiendo la mañana con Mister</td>
+                               <td> Mister Jhonson
+                                 <a href="whatsapp://send?text=Hola Mister&phone=+584167517674">
+                                     <i class="fab fa-whatsapp fa-1x " style="color:green;" ></i></a>
+                               </td>
+                           </tr>
+                           <tr>
+                               <td>12:00hs - 13:00hs</td>
+                               <td>Programacion</td>
+                               <td>Esperando Inf.</td>
+                           </tr>
+                           <tr>
+                               <td>13:00hs - 15:00hs</td>
+                               <td>Super Trendy</td>
+                               <td>Saray
+                                   <a href="whatsapp://send?text=Hola Sarahi&phone=+584168368109">
+                                       <i class="fab fa-whatsapp fa-1x " style="color:green;" ></i></a>
+                                    y Landy
+                                 <a href="whatsapp://send?text=Hola Daniel&phone=+584169985040">
+                                     <i class="fab fa-whatsapp fa-1x " style="color:green;" ></i></a>
+                               </td>
+                           </tr>
+                           <tr>
+                               <td>15:00hs - 16:00hs</td>
+                               <td>Explosion vallenata</td>
+                               <td>Alberto Contreras
+                                 <a href="whatsapp://send?text=Hola Alberto&phone=+584162712613">
+                                     <i class="fab fa-whatsapp fa-1x " style="color:green;" ></i></a>
+                               </td>
+                           </tr>
+                           <tr>
+                               <td>16:00hs - 18:00hs</td>
+                               <td>Retro hits</td>
+                               <td> Mister Jhonson
+                                 <a href="whatsapp://send?text=Hola Mister&phone=+584167517674">
+                                     <i class="fab fa-whatsapp fa-1x " style="color:green;" ></i></a>
+                               </td>
+                           </tr>
+                           <tr>
+                               <td>18:00hs - 19:00hs</td>
+                               <td>Cruzada deportiva</td>
+                               <td>Ivan Rondon</td>
+                           </tr>
+                           <tr>
+                               <td>19:00hs - 18:30hs</td>
+                               <td>Una ranchera y un vallenato</td>
+                               <td>Esperando Inf.</td>
+                           </tr>
+                       </table>
+                     </div>
+                   </div>
+                 </div>
+           
+                 <div class="card">
+                   <div class="card-header" id="heading3">
+                     <h5 class="mb-0">
+                       <button class="btn btn-link" data-toggle="collapse" data-target="#collapse3" aria-expanded="true" aria-controls="collapse3">
+                         MIERCOLES
+                       </button>
+                     </h5>
+                   </div>
+                   <div id="collapse3" class="collapse" aria-labelledby="heading3" data-parent="#accordion">
+                     <div class="card-body">
+                       <table class="table table-striped">
+                           <tr>
+                               <th>HORA</th>
+                               <th>PROGRAMA</th>
+                               <th>LOCUTOR</th>
+                           </tr>
+                           <tr>
+                               <td>06:00hs - 08:00hs</td>
+                               <td>Lo Mejor de la musica campesina y llanera</td>
+                               <td>Esperando Inf.</td>
+                           </tr>
+                           <tr>
+                               <td>08:00hs - 09:00hs</td>
+                               <td>Epoca de Oro</td>
+                               <td>Esperando Inf.</td>
+                           </tr>
+                           <tr>
+                               <td>09:00hs - 12:00hs</td>
+                               <td>Rompiendo la mañana con Mister</td>
+                               <td> Mister Jhonson
+                                 <a href="whatsapp://send?text=Hola Mister&phone=+584167517674">
+                                     <i class="fab fa-whatsapp fa-1x " style="color:green;" ></i></a>
+                               </td>
+                           </tr>
+                           <tr>
+                               <td>12:00hs - 13:00hs</td>
+                               <td>Programacion</td>
+                               <td>Esperando Inf.</td>
+                           </tr>
+                           <tr>
+                               <td>13:00hs - 15:00hs</td>
+                               <td>Super Trendy</td>
+                               <td>Saray
+                                   <a href="whatsapp://send?text=Hola Sarahi&phone=+584168368109">
+                                       <i class="fab fa-whatsapp fa-1x " style="color:green;" ></i></a>
+                                    y Landy
+                                 <a href="whatsapp://send?text=Hola Daniel&phone=+584169985040">
+                                     <i class="fab fa-whatsapp fa-1x " style="color:green;" ></i></a>
+                               </td>
+                           </tr>
+                           <tr>
+                               <td>15:00hs - 16:00hs</td>
+                               <td>Explosion vallenata</td>
+                               <td>Alberto Contreras
+                                 <a href="whatsapp://send?text=Hola Alberto&phone=+584162712613">
+                                     <i class="fab fa-whatsapp fa-1x " style="color:green;" ></i></a>
+                               </td>
+                           </tr>
+                           <tr>
+                               <td>16:00hs - 18:00hs</td>
+                               <td>Retro hits</td>
+                               <td> Mister Jhonson
+                                 <a href="whatsapp://send?text=Hola Mister&phone=+584167517674">
+                                     <i class="fab fa-whatsapp fa-1x " style="color:green;" ></i></a>
+                               </td>
+                           </tr>
+                           <tr>
+                               <td>18:00hs - 19:00hs</td>
+                               <td>Cruzada deportiva</td>
+                               <td>Ivan Rondon</td>
+                           </tr>
+                           <tr>
+                               <td>19:00hs - 18:30hs</td>
+                               <td>Una ranchera y un vallenato</td>
+                               <td>Esperando Inf.</td>
+                           </tr>
+                       </table>
+                     </div>
+                   </div>
+                 </div>
+   
+                 <div class="card">
+                   <div class="card-header" id="heading4">
+                     <h5 class="mb-0">
+                       <button class="btn btn-link" data-toggle="collapse" data-target="#collapse4" aria-expanded="true" aria-controls="collapse4">
+                         JUEVES
+                       </button>
+                     </h5>
+                   </div>
+                   <div id="collapse4" class="collapse" aria-labelledby="heading4" data-parent="#accordion">
+                     <div class="card-body">
+                       <table class="table table-striped">
+                           <tr>
+                               <th>HORA</th>
+                               <th>PROGRAMA</th>
+                               <th>LOCUTOR</th>
+                           </tr>
+                           <tr>
+                               <td>06:00hs - 08:00hs</td>
+                               <td>Lo Mejor de la musica campesina y llanera</td>
+                               <td>Esperando Inf.</td>
+                           </tr>
+                           <tr>
+                               <td>08:00hs - 09:00hs</td>
+                               <td>Epoca de Oro</td>
+                               <td>Esperando Inf.</td>
+                           </tr>
+                           <tr>
+                               <td>09:00hs - 12:00hs</td>
+                               <td>Rompiendo la mañana con Mister</td>
+                               <td> Mister Jhonson
+                                 <a href="whatsapp://send?text=Hola Mister&phone=+584167517674">
+                                     <i class="fab fa-whatsapp fa-1x " style="color:green;" ></i></a>
+                               </td>
+                           </tr>
+                           <tr>
+                               <td>12:00hs - 13:00hs</td>
+                               <td>Palabras de vida eterna</td>
+                               <td> Pastor Yair Guevara
+                                   <a href="whatsapp://send?text=Hola Yair&phone=+573164121890">
+                                       <i class="fab fa-whatsapp fa-1x " style="color:green;" ></i></a>
+                               </td>
+                           </tr>
+                           <tr>
+                               <td>13:00hs - 15:00hs</td>
+                               <td>Super Trendy</td>
+                               <td>Saray
+                                   <a href="whatsapp://send?text=Hola Sarahi&phone=+584168368109">
+                                       <i class="fab fa-whatsapp fa-1x " style="color:green;" ></i></a>
+                                    y Landy
+                                 <a href="whatsapp://send?text=Hola Daniel&phone=+584169985040">
+                                     <i class="fab fa-whatsapp fa-1x " style="color:green;" ></i></a>
+                               </td>
+                           </tr>
+                           <tr>
+                               <td>15:00hs - 16:00hs</td>
+                               <td>Explosion vallenata</td>
+                               <td>Alberto Contreras
+                                 <a href="whatsapp://send?text=Hola Alberto&phone=+584162712613">
+                                     <i class="fab fa-whatsapp fa-1x " style="color:green;" ></i></a>
+                               </td>
+                           </tr>
+                           <tr>
+                               <td>16:00hs - 18:00hs</td>
+                               <td>Retro hits</td>
+                               <td> Mister Jhonson
+                                 <a href="whatsapp://send?text=Hola Mister&phone=+584167517674">
+                                     <i class="fab fa-whatsapp fa-1x " style="color:green;" ></i></a>
+                               </td>
+                           </tr>
+                           <tr>
+                               <td>18:00hs - 19:00hs</td>
+                               <td>Cruzada deportiva</td>
+                               <td>Ivan Rondon</td>
+                           </tr>
+                           <tr>
+                               <td>19:00hs - 18:30hs</td>
+                               <td>Una ranchera y un vallenato</td>
+                               <td>Esperando Inf.</td>
+                           </tr>
+                       </table>
+                     </div>
+                   </div>
+                 </div>
+   
+                 <div class="card">
+                   <div class="card-header" id="heading5">
+                     <h5 class="mb-0">
+                       <button class="btn btn-link" data-toggle="collapse" data-target="#collapse5" aria-expanded="true" aria-controls="collapse5">
+                         VIERNES
+                       </button>
+                     </h5>
+                   </div>
+                   <div id="collapse5" class="collapse" aria-labelledby="heading5" data-parent="#accordion">
+                     <div class="card-body">
+                       <table class="table table-striped">
+                           <tr>
+                               <th>HORA</th>
+                               <th>PROGRAMA</th>
+                               <th>LOCUTOR</th>
+                           </tr>
+                           <tr>
+                               <td>06:00hs - 08:00hs</td>
+                               <td>Lo Mejor de la musica campesina y llanera</td>
+                               <td>Esperando Inf.</td>
+                           </tr>
+                           <tr>
+                               <td>08:00hs - 09:00hs</td>
+                               <td>Epoca de Oro</td>
+                               <td>Esperando Inf.</td>
+                           </tr>
+                           <tr>
+                               <td>09:00hs - 12:00hs</td>
+                               <td>Rompiendo la mañana con Mister</td>
+                               <td> Mister Jhonson
+                                 <a href="whatsapp://send?text=Hola Mister&phone=+584167517674">
+                                     <i class="fab fa-whatsapp fa-1x " style="color:green;" ></i></a>
+                               </td>
+                           </tr>
+                           <tr>
+                               <td>12:00hs - 13:00hs</td>
+                               <td>Rios de agua viva</td>
+                               <td>Esperando Inf.</td>
+                           </tr>
+                           <tr>
+                               <td>13:00hs - 15:00hs</td>
+                               <td>Super Trendy</td>
+                               <td>Saray
+                                   <a href="whatsapp://send?text=Hola Sarahi&phone=+584168368109">
+                                       <i class="fab fa-whatsapp fa-1x " style="color:green;" ></i></a>
+                                    y Landy
+                                 <a href="whatsapp://send?text=Hola Daniel&phone=+584169985040">
+                                     <i class="fab fa-whatsapp fa-1x " style="color:green;" ></i></a>
+                               </td>
+                           </tr>
+                           <tr>
+                               <td>15:00hs - 16:00hs</td>
+                               <td>Explosion vallenata</td>
+                               <td>Alberto Contreras
+                                 <a href="whatsapp://send?text=Hola Alberto&phone=+584162712613">
+                                     <i class="fab fa-whatsapp fa-1x " style="color:green;" ></i></a>
+                               </td>
+                           </tr>
+                           <tr>
+                               <td>16:00hs - 18:00hs</td>
+                               <td>Retro hits</td>
+                               <td> Mister Jhonson
+                                 <a href="whatsapp://send?text=Hola Mister&phone=+584167517674">
+                                     <i class="fab fa-whatsapp fa-1x " style="color:green;" ></i></a>
+                               </td>
+                           </tr>
+                           <tr>
+                               <td>18:00hs - 19:00hs</td>
+                               <td>Cruzada deportiva</td>
+                               <td>Ivan Rondon</td>
+                           </tr>
+                           <tr>
+                               <td>19:00hs - 18:30hs</td>
+                               <td>Una ranchera y un vallenato</td>
+                               <td>Esperando Inf.</td>
+                           </tr>
+                       </table>
+                     </div>
+                   </div>
+                 </div>
+   
+                 <div class="card">
+                   <div class="card-header" id="heading6">
+                     <h5 class="mb-0">
+                       <button class="btn btn-link" data-toggle="collapse" data-target="#collapse6" aria-expanded="true" aria-controls="collapse6">
+                         SABADO
+                       </button>
+                     </h5>
+                   </div>
+                   <div id="collapse6" class="collapse" aria-labelledby="heading6" data-parent="#accordion">
+                     <div class="card-body">
+                       <table class="table table-striped">
+                           <tr>
+                               <th>HORA</th>
+                               <th>PROGRAMA</th>
+                               <th>LOCUTOR</th>
+                           </tr>
+                           <tr>
+                               <td>06:00hs - 09:00hs</td>
+                               <td>Lo Mejor de la musica campesina y llanera</td>
+                               <td>Esperando Inf.</td>
+                           </tr>
+                           <tr>
+                               <td>09:00hs - 12:00hs</td>
+                               <td>De fiesta con la Orquesta</td>
+                               <td> Mister Jhonson
+                                   <a href="whatsapp://send?text=Hola Mister&phone=+584167517674">
+                                       <i class="fab fa-whatsapp fa-1x " style="color:green;" ></i></a>
+                                 </td>
+                           </tr>
+                           <tr>
+                               <td>13:00 - 15:30</td>
+                               <td>Al ritmo de la salsa</td>
+                               <td>Ivan Rondon</td>
+                           </tr>
+                           <tr>
+                               <td>15:30 - 18:00hs</td>
+                               <td>Rigotex el Maximo Exponente del House</td>
+                               <td>Esperando Inf.</td>
+                           </tr>
+                           <tr>
+                               <td>18:00hs - 20:00hs</td>
+                               <td>The Best Music</td>
+                               <td>Gabriel Bustamante (El Gato)
+                                   <a href="whatsapp://send?text=Hola Gabriel&phone=+584268733453">
+                                       <i class="fab fa-whatsapp fa-1x " style="color:green;" ></i></a>
+                               </td>
+                           </tr>
+                       </table>
+                     </div>
+                   </div>
+                 </div>
+   
+                 <div class="card">
+                   <div class="card-header" id="heading7">
+                     <h5 class="mb-0">
+                       <button class="btn btn-link" data-toggle="collapse" data-target="#collapse7" aria-expanded="true" aria-controls="collapse7">
+                         DOMINGO
+                       </button>
+                     </h5>
+                   </div>
+                   <div id="collapse7" class="collapse" aria-labelledby="heading7" data-parent="#accordion">
+                     <div class="card-body">
+                       <table class="table table-striped">
+                           <tr>
+                               <th>HORA</th>
+                               <th>PROGRAMA</th>
+                               <th>LOCUTOR</th>
+                           </tr>
+                           <tr>
+                               <td>06:00hs - 08:00hs</td>
+                               <td>Lo Mejor de la musica campesina y llanera</td>
+                               <td>Esperando Inf.</td>
+                           </tr>
+                           <tr>
+                               <td>08:0hs - 10:00hs</td>
+                               <td>Al ritmo de raspa canilla</td>
+                               <td>Ivan Rondon</td>
+                           </tr>
+                           <tr>
+                               <td>10:00hs - 11:00hs</td>
+                               <td>SANTA MISA</td>
+                               <td>Iglesia</td>
+                           </tr>
+                           <tr>
+                               <td>15:00hs - 17:00hs</td>
+                               <td>Conexion</td>
+                               <td>Alberto Contreras
+                                   <a href="whatsapp://send?text=Hola Alberto&phone=+584162712613">
+                                       <i class="fab fa-whatsapp fa-1x " style="color:green;" ></i></a>
+                               </td>
+                           </tr>
+                           <tr>
+                               <td>17:00hs - 19:00hs</td>
+                               <td>The Best Music</td>
+                               <td>Gabriel Bustamante (El Gato)
+                                   <a href="whatsapp://send?text=Hola Gabriel&phone=+584268733453">
+                                       <i class="fab fa-whatsapp fa-1x " style="color:green;" ></i></a>
+                               </td>
+                           </tr>
+                       </table>
+                     </div>
+                   </div>
+                 </div>
+   
+           </div>
+        </div>
+       </div>
+
+       <hr>
+
+       <div id="radioUribantina" name="radioUribantina" class="div_secciones">
+           <p class="tituloRadio">
+           <i class="fas fa-list-ul"  style="color: azure;" onclick="mostrarProgramacion(this)"></i>
+               RADIO URIBANTINA 104.7FM
+           </p>
+       <div class="container">
+           <div class="row">
+               <div class="col-2">
+                   <img width="45"  class="mask_radios" onclick="mostrarProgramacion(this)" height="auto" src="https://scontent.fkna1-1.fna.fbcdn.net/v/t31.0-8/1412395_601321639940064_262005075_o.jpg?_nc_cat=101&ccb=2&_nc_sid=09cbfe&_nc_ohc=5Q361cTaZhcAX-KdlCY&_nc_ht=scontent.fkna1-1.fna&oh=1dd7b988a4e1f250cd382a001fa086aa&oe=5FDCEF3B" alt="" >
+               </div>
+               <div class="col-10">
+                   <audio id="myAudio2" controls class="audioS" loop="loop" style="width: 100%;"> 
+                       <source src="http://freeuk26.listen2myradio.com:18753/;?type=http&nocache=2;" type="audio/mpeg" id="prueba2">
+                   </audio>
+               </div>
+           </div>
+       </div>
+
+           <span></span>  
+
+           <div id="accordion2" class="mt-500 desplazar" style="display: none;">
+
+               <div class="card">
+                 <div class="card-header" id="heading8">
+                   <h5 class="mb-0">
+                     <button class="btn btn-link" data-toggle="collapse" data-target="#collapse8" aria-expanded="true" aria-controls="collapse8">
+                       LUNES
+                     </button>
+                   </h5>
+                 </div>
+                 <div id="collapse8" class="collapse" aria-labelledby="heading8" data-parent="#accordion2">
+                   <div class="card-body">
+                     <table class="table table-striped">
+                         <tr>
+                             <th>HORA</th>
+                             <th>PROGRAMA</th>
+                             <th>LOCUTOR</th>
+                         </tr>
+                         <tr>
+                             <td>06:00hs - 07:00hs</td>
+                             <td>Amaneciendo en mi Rancho</td>
+                             <td>Antonio Diaz
+                               <a href="whatsapp://send?text=Hola Antonio&phone=+584162783951">
+                                   <i class="fab fa-whatsapp fa-1x " style="color:green;" ></i></a>
+                             </td>
+                         </tr>
+                         <tr>
+                             <td>07:30hs - 07:45hs</td>
+                             <td>El Evangelion del dia</td>
+                             <td>Esperando Inf.</td>
+                           </tr>
+                         <tr>
+                             <td>07:45hs - 08:00hs</td>
+                             <td>El santo del Dia</td>
+                             <td>Esperando Inf.</td>
+                           </tr>
+                         <tr>
+                             <td>08:00hs - 11:00hs</td>
+                             <td>Tus mañanas musicales</td>
+                             <td>Antonio Diaz
+                               <a href="whatsapp://send?text=Hola Antonio&phone=+584162783951">
+                                   <i class="fab fa-whatsapp fa-1x " style="color:green;" ></i></a>
+                             </td>
+                           </tr>
+                         <tr>
+                             <td>12:00hs - 14:00hs</td>
+                             <td>En Altavoz</td>
+                             <td>Jeison Pabón
+                               <a href="whatsapp://send?text=Hola Jeison&phone=+584267621240">
+                                   <i class="fab fa-whatsapp fa-1x " style="color:green;" ></i></a>
+                           </td>
+                           </tr>
+                         <tr>
+                             <td>14:00hs - 15:00hs</td>
+                             <td>Programacion</td>
+                             <td>Esperando Inf.</td>
+                           </tr>
+                         <tr>
+                             <td>15:00hs - 17:00hs</td>
+                             <td>Vacilate lo que queda</td>
+                             <td> Jackson Duran
+                               <a href="whatsapp://send?text=Hola Jackson&phone=+584165761971">
+                                   <i class="fab fa-whatsapp fa-1x " style="color:green;" ></i></a>
+                             </td>
+                           </tr>
+                         <tr>
+                             <td>17:00hs - 18:00hs</td>
+                             <td>Programacion</td>
+                             <td>Esperando Inf.</td>
+                           </tr>
+                         <tr>
+                             <td>18:00hs - 20:00hs</td>
+                             <td>Parranda Navideña</td>
+                             <td>Esperando Inf.</td>
+                           </tr>
+                         <tr>
+                             <td>20:00hs - 22:00hs</td>
+                             <td>Salsa con Estilo</td>
+                             <td>Esperando Inf.</td>
+                           </tr>
+                         <tr>
+                             <td>22:00hs - 23:30hs</td>
+                             <td>Progamacion</td>
+                             <td>Esperando Inf.</td>
+                           </tr>
+                     </table>
+                   </div>
+                 </div>
+               </div>
+
+               <div class="card">
+                 <div class="card-header" id="heading9">
+                   <h5 class="mb-0">
+                     <button class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapse9" aria-expanded="false" aria-controls="collapse9">
+                       MARTES
+                     </button>
+                   </h5>
+                 </div>
+                 <div id="collapse9" class="collapse" aria-labelledby="heading9" data-parent="#accordion2">
+                   <div class="card-body">
+                       <table class="table table-striped">
+                           <tr>
+                               <th>HORA</th>
+                               <th>PROGRAMA</th>
+                               <th>LOCUTOR</th>
+                           </tr>
+                           <tr>
+                               <td>06:00hs - 07:00hs</td>
+                               <td>Amaneciendo en mi Rancho</td>
+                               <td>Antonio Diaz
+                                   <a href="whatsapp://send?text=Hola Antonio&phone=+584162783951">
+                                       <i class="fab fa-whatsapp fa-1x " style="color:green;" ></i></a>
+                               </td>
+                           </tr>
+                           <tr>
+                               <td>07:30hs - 07:45hs</td>
+                               <td>El Evangelion del dia</td>
+                               <td>Esperando Inf.</td>
+                           </tr>
+                           <tr>
+                               <td>07:45hs - 08:00hs</td>
+                               <td>El santo del Dia</td>
+                               <td>Esperando Inf.</td>
+                           </tr>
+                           <tr>
+                               <td>08:00hs - 11:00hs</td>
+                               <td>Tus mañanas musicales</td>
+                               <td>Antonio Diaz
+                                   <a href="whatsapp://send?text=Hola Antonio&phone=+584162783951">
+                                       <i class="fab fa-whatsapp fa-1x " style="color:green;" ></i></a>
+                               </td>
+                           </tr>
+                           <tr>
+                               <td>12:00hs - 14:00hs</td>
+                               <td>En Altavoz</td>
+                               <td>Jeison Pabón
+                                   <a href="whatsapp://send?text=Hola Jeison&phone=+584267621240">
+                                       <i class="fab fa-whatsapp fa-1x " style="color:green;" ></i></a>
+                               </td>
+                           </tr>
+                           <tr>
+                               <td>14:00hs - 15:00hs</td>
+                               <td>Programacion</td>
+                               <td>Esperando Inf.</td>
+                           </tr>
+                           <tr>
+                               <td>15:00hs - 17:00hs</td>
+                               <td>Vacilate lo que queda</td>
+                               <td> Jackson Duran
+                                   <a href="whatsapp://send?text=Hola Jackson&phone=+584165761971">
+                                       <i class="fab fa-whatsapp fa-1x " style="color:green;" ></i></a>
+                               </td>
+                           </tr>
+                           <tr>
+                               <td>17:00hs - 18:00hs</td>
+                               <td>Programacion</td>
+                               <td>Esperando Inf.</td>
+                           </tr>
+                           <tr>
+                               <td>18:00hs - 20:00hs</td>
+                               <td>Parranda Navideña</td>
+                               <td>Esperando Inf.</td>
+                           </tr>
+                           <tr>
+                               <td>20:00hs - 23:30hs</td>
+                               <td>Onda para Enamorados</td>
+                               <td>David Osorio
+                                   <a href="whatsapp://send?text=Hola David&phone=+584269723198">
+                                       <i class="fab fa-whatsapp fa-1x " style="color:green;" ></i></a>
+                               </td>
+                           </tr>
+                       </table>
+                   </div>
+                 </div>
+               </div>
+
+               <div class="card">
+                 <div class="card-header" id="headingThree">
+                   <h5 class="mb-0">
+                     <button class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+                       MIERCOLES
+                     </button>
+                   </h5>
+                 </div>
+                 <div id="collapseThree" class="collapse" aria-labelledby="headingThree" data-parent="#accordion2">
+                   <div class="card-body">
+                       <table class="table table-striped">
+                           <tr>
+                               <th>HORA</th>
+                               <th>PROGRAMA</th>
+                               <th>LOCUTOR</th>
+                           </tr>
+                           <tr>
+                               <td>06:00hs - 07:00hs</td>
+                               <td>Amaneciendo en mi Rancho</td>
+                               <td>Antonio Diaz
+                                   <a href="whatsapp://send?text=Hola Antonio&phone=+584162783951">
+                                       <i class="fab fa-whatsapp fa-1x " style="color:green;" ></i></a>
+                               </td>
+                           </tr>
+                           <tr>
+                           <tr>
+                               <td>06:30hs - 07:45hs</td>
+                               <td>El Evangelion del dia</td>
+                               <td>Esperando Inf.</td>
+                           </tr>
+                           <tr>
+                               <td>07:45hs - 08:00hs</td>
+                               <td>El santo del Dia</td>
+                               <td>Esperando Inf.</td>
+                           </tr>
+                           <tr>
+                               <td>08:00hs - 11:00hs</td>
+                               <td>Tus mañanas musicales</td>
+                               <td>Antonio Diaz
+                                   <a href="whatsapp://send?text=Hola Antonio&phone=+584162783951">
+                                       <i class="fab fa-whatsapp fa-1x " style="color:green;" ></i></a>
+                               </td>
+                           </tr>
+                           <tr>
+                               <td>12:00hs - 14:00hs</td>
+                               <td>En Altavoz</td>
+                               <td>Jeison Pabón
+                                   <a href="whatsapp://send?text=Hola Jeison&phone=+584267621240">
+                                       <i class="fab fa-whatsapp fa-1x " style="color:green;" ></i></a>
+                               </td>
+                           </tr>
+                           <tr>
+                               <td>14:00hs - 15:00hs</td>
+                               <td>Programacion</td>
+                               <td>Esperando Inf.</td>
+                           </tr>
+                           <tr>
+                               <td>15:00hs - 17:00hs</td>
+                               <td>Vacilate lo que queda</td>
+                               <td> Jackson Duran
+                                   <a href="whatsapp://send?text=Hola Jackson&phone=+584165761971">
+                                       <i class="fab fa-whatsapp fa-1x " style="color:green;" ></i></a>
+                               </td>
+                           </tr>
+                           <tr>
+                               <td>17:00hs - 18:00hs</td>
+                               <td>Nuestra Via es Uribante</td>
+                               <td>Esperando Inf.</td>
+                           </tr>
+                           <tr>
+                               <td>18:00hs - 20:00hs</td>
+                               <td>Parranda Navideña</td>
+                               <td>Esperando Inf.</td>
+                           </tr>
+                           <tr>
+                               <td>20:00hs - 23:30hs</td>
+                               <td>Onda para Enamorados</td>
+                               <td>David Osorio
+                                   <a href="whatsapp://send?text=Hola David&phone=+584269723198">
+                                       <i class="fab fa-whatsapp fa-1x " style="color:green;" ></i></a>
+                               </td>
+                           </tr>
+                       </table>
+                   </div>
+                 </div>
+               </div>
+           
+               <div class="card">
+                   <div class="card-header" id="headingFor">
+                     <h5 class="mb-0">
+                       <button class="btn btn-link" data-toggle="collapse" data-target="#collapseFor" aria-expanded="true" aria-controls="collapseFor">
+                         JUEVES
+                       </button>
+                     </h5>
+                   </div>
+                   <div id="collapseFor" class="collapse" aria-labelledby="headingFor" data-parent="#accordion2">
+                     <div class="card-body">
+                       <table class="table table-striped">
+                           <tr>
+                               <th>HORA</th>
+                               <th>PROGRAMA</th>
+                               <th>LOCUTOR</th>
+                           </tr>
+                           <tr>
+                               <td>06:00hs - 07:00hs</td>
+                               <td>Amaneciendo en mi Rancho</td>
+                               <td>Antonio Diaz
+                                   <a href="whatsapp://send?text=Hola Antonio&phone=+584162783951">
+                                       <i class="fab fa-whatsapp fa-1x " style="color:green;" ></i></a>
+                               </td>
+                           </tr>
+                           <tr>
+                               <td>07:30hs - 07:45hs</td>
+                               <td>El Evangelion del dia</td>
+                               <td>Esperando Inf.</td>
+                           </tr>
+                           <tr>
+                               <td>07:45hs - 08:00hs</td>
+                               <td>El santo del Dia</td>
+                               <td>Esperando Inf.</td>
+                           </tr>
+                           <tr>
+                               <td>08:00hs - 11:00hs</td>
+                               <td>Tus mañanas musicales</td>
+                               <td>Antonio Diaz
+                                   <a href="whatsapp://send?text=Hola Antonio&phone=+584162783951">
+                                       <i class="fab fa-whatsapp fa-1x " style="color:green;" ></i></a>
+                               </td>
+                           </tr>
+                           <tr>
+                               <td>12:00hs - 14:00hs</td>
+                               <td>En Altavoz</td>
+                               <td>Jeison Pabón
+                                   <a href="whatsapp://send?text=Hola Jeison&phone=+584267621240">
+                                       <i class="fab fa-whatsapp fa-1x " style="color:green;" ></i></a>
+                               </td>
+                           </tr>
+                           <tr>
+                               <td>14:00hs - 15:00hs</td>
+                               <td>Programacion</td>
+                               <td>Esperando Inf.</td>
+                           </tr>
+                           <tr>
+                               <td>15:00hs - 17:00hs</td>
+                               <td>Solo Rancheras</td>
+                               <td>Yohn Otoniel Ramirez
+                                   <a href="whatsapp://send?text=Hola Otoniel&phone=+584164759764">
+                                       <i class="fab fa-whatsapp fa-1x " style="color:green;" ></i></a>
+                               </td>
+                           </tr>
+                           <tr>
+                               <td>17:00hs - 18:00hs</td>
+                               <td>Turismo Pregonero</td>
+                               <td>Esperando Inf.</td>
+                           </tr>
+                           <tr>
+                               <td>18:00hs - 20:00hs</td>
+                               <td>Parranda Navideña</td>
+                               <td>Esperando Inf.</td>
+                           </tr>
+                           <tr>
+                               <td>20:00hs - 23:30hs</td>
+                               <td>Onda para enamorados</td>
+                               <td>David Osorio
+                                   <a href="whatsapp://send?text=Hola David&phone=+584269723198">
+                                       <i class="fab fa-whatsapp fa-1x " style="color:green;" ></i></a>       
+                               </td>
+                           </tr>
+                       </table>
+                     </div>
+                   </div>
+                 </div>
+          
+                 <div class="card">
+                   <div class="card-header" id="headingFive">
+                     <h5 class="mb-0">
+                       <button class="btn btn-link" data-toggle="collapse" data-target="#collapseFive" aria-expanded="true" aria-controls="collapseFive">
+                         VIERNES
+                       </button>
+                     </h5>
+                   </div>
+                   <div id="collapseFive" class="collapse" aria-labelledby="headingFive" data-parent="#accordion2">
+                     <div class="card-body">
+                       <table class="table table-striped">
+                           <tr>
+                               <th>HORA</th>
+                               <th>PROGRAMA</th>
+                               <th>LOCUTOR</th>
+                           </tr>
+                           <tr>
+                               <td>06:00hs - 07:00hs</td>
+                               <td>Amaneciendo en mi Rancho</td>
+                               <td>Antonio Diaz
+                                   <a href="whatsapp://send?text=Hola Antonio&phone=+584162783951">
+                                       <i class="fab fa-whatsapp fa-1x " style="color:green;" ></i></a>
+                               </td>
+                           </tr>
+                           <tr>
+                               <td>07:30hs - 07:45hs</td>
+                               <td>El Evangelion del dia</td>
+                               <td>Esperando Inf.</td>
+                           </tr>
+                           <tr>
+                               <td>07:45hs - 08:00hs</td>
+                               <td>El santo del Dia</td>
+                               <td>Esperando Inf.</td>
+                           </tr>
+                           <tr>
+                               <td>08:00hs - 10:00hs</td>
+                               <td>Tus mañanas musicales</td>
+                               <td>Antonio Diaz
+                                   <a href="whatsapp://send?text=Hola Antonio&phone=+584162783951">
+                                       <i class="fab fa-whatsapp fa-1x " style="color:green;" ></i></a>
+                               </td>
+                           </tr>
+                           <tr>
+                               <td>10:00hs - 11:00hs</td>
+                               <td>Con las manos en la tiza</td>
+                               <td>Esperando Inf.</td>
+                           </tr>
+                           <tr>
+                               <td>12:00hs - 15:00hs</td>
+                               <td>Buena Vibra</td>
+                               <td>David Osorio
+                                   <a href="whatsapp://send?text=Hola David&phone=+584269723198">
+                                       <i class="fab fa-whatsapp fa-1x " style="color:green;" ></i></a>
+                               </td>
+                           </tr>
+                           <tr>
+                               <td>15:00hs - 17:00hs</td>
+                               <td>De los Andes al LLano</td>
+                               <td>Esperando Inf.</td>
+                           </tr>
+                           <tr>
+                               <td>17:00hs - 18:00hs</td>
+                               <td>Programacion</td>
+                               <td>Esperando Inf.</td>
+                           </tr>
+                           <tr>
+                               <td>18:00hs - 19:00hs</td>
+                               <td>La voz de la esperanza</td>
+                               <td>Esperando Inf.</td>
+                           </tr>
+                           <tr>
+                               <td>19:00hs - 21:00hs</td>
+                               <td>Salsa con Estilo</td>
+                               <td>Esperando Inf.</td>
+                           </tr>
+                           <tr>
+                               <td>21:00hs - 23:30hs</td>
+                               <td>Programacion</td>
+                               <td>Esperando Inf.</td>
+                           </tr>
+                       </table>
+                     </div>
+                   </div>
+                 </div>
+
+                 <div class="card">
+                   <div class="card-header" id="headingSix">
+                     <h5 class="mb-0">
+                       <button class="btn btn-link" data-toggle="collapse" data-target="#collapseSix" aria-expanded="true" aria-controls="collapseSix">
+                         SABADO
+                       </button>
+                     </h5>
+                   </div>
+                   <div id="collapseSix" class="collapse" aria-labelledby="headingSix" data-parent="#accordion2">
+                     <div class="card-body">
+                       <table class="table table-striped">
+                           <tr>
+                               <th>HORA</th>
+                               <th>PROGRAMA</th>
+                               <th>LOCUTOR</th>
+                           </tr>
+                           <tr>
+                               <td>06:00hs - 07:00hs</td>
+                               <td>El Trompetazo del Sabado</td>
+                               <td>Antonio Diaz
+                                   <a href="whatsapp://send?text=Hola Antonio&phone=+584162783951">
+                                       <i class="fab fa-whatsapp fa-1x " style="color:green;" ></i></a>
+                               </td>
+                           </tr>
+                           <tr>
+                               <td>07:00hs - 08:00hs</td>
+                               <td>Punto de Arranque</td>
+                               <td>Esperando Inf.</td>
+                           </tr>
+                           <tr>
+                               <td>08:00hs - 11:00hs</td>
+                               <td>Mi Vieja Discoteca</td>
+                               <td>Yohn Otoniel Ramirez
+                                   <a href="whatsapp://send?text=Hola Otoniel&phone=+584164759764">
+                                       <i class="fab fa-whatsapp fa-1x " style="color:green;" ></i></a>
+                               </td>
+                           </tr>
+                           <tr>
+                               <td>11:00hs - 12:00hs</td>
+                               <td>Evangelicos Libres</td>
+                               <td>Esperando Inf.</td>
+                           </tr>
+                           <tr>
+                               <td>12:00hs - 13:00hs</td>
+                               <td>Programacion</td>
+                               <td>Esperando Inf.</td>
+                           </tr>
+                           <tr>
+                               <td>13:00hs - 16:00hs</td>
+                               <td>Parranda Pregonereña</td>
+                               <td>Pedro Soto
+                                   <a href="whatsapp://send?text=Hola Pedro&phone=+584161346789">
+                                       <i class="fab fa-whatsapp fa-1x " style="color:green;" ></i></a>
+                               </td>
+                           </tr>
+                           <tr>
+                               <td>16:00hs - 19:00hs</td>
+                               <td>Super Juveniles</td>
+                               <td> Jackson Duran
+                                   <a href="whatsapp://send?text=Hola Jackson&phone=+584165761971">
+                                       <i class="fab fa-whatsapp fa-1x " style="color:green;" ></i></a>
+                               </td>
+                           </tr>
+                           <tr>
+                               <td>19:00hs en adelante</td>
+                               <td>Programacion</td>
+                               <td>Esperando Inf.</td>
+                           </tr>
+                       </table>
+                     </div>
+                   </div>
+                 </div>
+
+                 <div class="card">
+                   <div class="card-header" id="headingSeven">
+                     <h5 class="mb-0">
+                       <button class="btn btn-link" data-toggle="collapse" data-target="#collapseSeven" aria-expanded="true" aria-controls="collapseSeven">
+                         DOMINGO
+                       </button>
+                     </h5>
+                   </div>
+                   <div id="collapseSeven" class="collapse" aria-labelledby="headingSeven" data-parent="#accordion2">
+                     <div class="card-body">
+                       <table class="table table-striped">
+                           <tr>
+                               <th>HORA</th>
+                               <th>PROGRAMA</th>
+                               <th>LOCUTOR</th>
+                           </tr>
+                           <tr>
+                               <td>05:30hs - 07:00hs</td>
+                               <td>Llanerisimas</td>
+                               <td>Esperando Inf.</td>
+                           </tr>
+                           <tr>
+                               <td>07:00hs - 08:00hs</td>
+                               <td>SANTA MISA(San Antonio de Padua)</td>
+                               <td>Esperando Inf.</td>
+                           </tr>
+                           <tr>
+                               <td>08:00hs - 11:00hs</td>
+                               <td>Mexico, Colombia y Venezuela</td>
+                               <td>Yohn Otoniel Ramirez
+                                   <a href="whatsapp://send?text=Hola Otoniel&phone=+584164759764">
+                                       <i class="fab fa-whatsapp fa-1x " style="color:green;" ></i></a>
+                               </td>
+                           </tr>
+                           <tr>
+                               <td>11:00hs - 12:00hs</td>
+                               <td>Programacion</td>
+                               <td>Esperando Inf.</td>
+                           </tr>
+                           <tr>
+                               <td>12:00hs - 15:00hs</td>
+                               <td>Fiesta Campesina</td>
+                               <td>David Osorio
+                                   <a href="whatsapp://send?text=Hola David&phone=+584269723198">
+                                       <i class="fab fa-whatsapp fa-1x " style="color:green;" ></i></a>
+                               </td>
+                           </tr>
+                           <tr>
+                               <td>15:00hs - 17:00hs</td>
+                               <td>Programacion</td>
+                               <td>Esperando Inf.</td>
+                           </tr>
+                           <tr>
+                               <td>17:00hs - 18:00hs</td>
+                               <td>SANTA MISA(Parroquia el Carmen)</td>
+                               <td>Esperando Inf.</td>
+                           </tr>
+                           <tr>
+                               <td>18:00hs en adelante</td>
+                               <td>Noches del Recuerdo</td>
+                               <td>Esperando Inf.</td>
+                           </tr>
+                       </table>                      </div>
+                   </div>
+                 </div>
+
+           </div>
+
+       </div>
+
+       <hr>
+
+           <div id="mundoChacaro" name="mundoChacaro" class="div_secciones">
+               <p class="tituloRadio">
+                   <i class="fas fa-list-ul"  style="color: azure;"  onclick="mostrarProgramacion(this)"></i>
+                   RADIO MUNDO CHACARO - ONLINE
+               </p>
+               <div class="container">
+                   <div class="row">
+                       <div class="col-2">
+                           <img class="mask_radios" width="45" onclick="mostrarProgramacion(this)" height="auto" src="https://api.raddios.com/api/radios/16658/image/miniaturamovil?2020-07-09%2016:50:25" alt="">
+                       </div>
+                       <div class="col-10">
+                           <audio id="myAudio3" controls class="audioS" loop="loop" style="width: 100%;">
+                               <source src="http://node-08.zeno.fm/xzc4strbxzzuv?rj-ttl=5&rj-tok=AAABdR40EIwA0LgFAxDnDEHm9Q" type="audio/mpeg" id="prueba3">
+                           </audio>
+                       </div>
+                   </div>
+               </div>
+               <span></span>
+               <div id="accordion3" class="mt-500 desplazar" style="display: none;">
+               <table class="table table-striped">
+                   <div class="card">
+                       <div class="card-header" id="heading1">
+                         <h5 class="mb-0">
+                           <button class="btn btn-link" data-toggle="collapse" data-target="#collapse1" aria-expanded="true" aria-controls="collapse1">
+                             A LA ESPERA DE INF.
+                           </button>
+                         </h5>
+                       </div>
+                   </div>
+               </table>
+               </div>
+           </div>
+   </div>
+   <!-- Modal -->
+<div class="modal fade" id="mensajes" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Informacion</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+            Apreciado usuario, informamos que es probable que en el municipio no haya servicio de internet o electricidad, pedimos disculpas por las molestias causadas. 
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+   
+   <footer>
+       <p style="display: block;" class="politica">Esta aplicacion es solo de informacion, cualquier tipo de ejecucion dentro de ella es resposabilidad de cada emisor</p>
+   </footer>
+
+<script>
+/* INICIO reproductor de emisora*/
+document.addEventListener('error', function failed(e) {
+    if((e.target.closest(".div_secciones")) && (e.target.closest(".div_secciones").querySelector('span'))) { 
+        let spanDeEmisoraFallando=e.target.closest(".div_secciones").querySelector('span');
+        spanDeEmisoraFallando.innerHTML=`<p class="falla-conexion">FALLA DE CONEXION</p>`;
+    }
+    fallas = Array.from(document.querySelectorAll('.falla-conexion'));
+    if(fallas.length > 2) {
+        $( document ).ready(function() {
+            $("#mensajes").modal("show");
+        });
+    }
+
+}, true);
+var audios= Array.from(document.getElementsByTagName('audio'));
+function refrescar(){
+    for(i=0; i < audios.length; i++){
+        document.getElementById(audios[i].id).load();
+    }
+}
+function mostrarProgramacion(e) {
+    const elemento = e.closest(".div_secciones").querySelector(".desplazar");
+    if(elemento.style.display=="none"){
+        elemento.style.display="block";
+    }   else{
+        elemento.style.display="none";
+    }
+}
+window.addEventListener("load", function(event) {
+    
+    document.querySelector('.contenido').style.display='block';
+    document.querySelector('.cargando').style.display='none';
+    
+    audios.forEach(function(audio) {
+    audio.onplay = function() {
+        audios.forEach(function(elemento){
+            if(elemento.id!=audio.id){
+                if(document.querySelector('#'+elemento.id).currentTime > 0) {
+                    document.querySelector('#'+elemento.id).load();
+                }
+                document.querySelector('#'+elemento.id).closest(".container").querySelector('.mask_radios').classList.remove('animationScaleSize');
+            }
+        } );
+        //animationScaleSize
+        document.querySelector('#'+audio.id).closest(".container").querySelector('.mask_radios').classList.add('animationScaleSize');
+        document.querySelector('#'+audio.id).closest(".div_secciones").querySelector('span').innerHTML='';
+    };
+    /*
+    audio.onstalled = function() {
+        document.querySelector('#'+audio.id).load();
+        document.querySelector('#'+audio.id).play();
+        setTimeout(() => {    
+            
+        }, 1000);
+    };*/
+    audio.onpause = function() {
+        document.querySelector('#'+audio.id).load();
+        document.querySelector('#'+audio.id).closest(".container").querySelector('.mask_radios').classList.remove('animationScaleSize');
+    };
+    audio.onerror = function() {
+        console.log('la emisiora: '+elemento.id+' no esta funcionando');
+    };
+    } );
+
+    //refrescar pagina
+    var refresh="";
+    
+
+    
+
+    /* FIN mostrar programacion de emisora*/
+
+    /* INICIO display informacion de pogramacion*/
+    
+});
+
+/* FIn display informacion de pogramacion*/
+</script>
+
+
+
+
+
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ho+j7jyWK8fNQe+A12Hb8AhRq26LrZ/JpcUGGOn+Y7RsweNrtN/tE3MoK7ZeZDyx" crossorigin="anonymous"></script>
+
+</body>
+</html>
